@@ -127,6 +127,47 @@ app.post('/admin/create', checkAuth, [
   });
 });
 
+// Rota para editar uma página
+app.get('/admin/edit/:name', checkAuth, (req, res) => {
+  const pagePath = path.join(__dirname, 'pages', `${req.params.name}.txt`);
+  fs.readFile(pagePath, 'utf8', (err, content) => {
+    if (err) {
+      return res.status(404).send('Página não foi encontrada');
+    }
+    res.render('edit', { url: req.params.name, content });
+  });
+});
+
+app.post('/admin/edit/:name', checkAuth, [
+  check('content').notEmpty().withMessage('É necesssário possuir um Conteúdo')
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).render('edit', { errors: errors.array(), url: req.params.name, content: req.body.content });
+  }
+
+  const { content } = req.body;
+  const pagePath = path.join(__dirname, 'pages', `${req.params.name}.txt`);
+  
+  fs.writeFile(pagePath, content, err => {
+    if (err) {
+      return res.status(500).send('Erro ao editar a página');
+    }
+    res.redirect('/admin');
+  });
+});
+
+// Rota para excluir uma página
+app.get('/admin/delete/:name', checkAuth, (req, res) => {
+  const pagePath = path.join(__dirname, 'pages', `${req.params.name}.txt`);
+  fs.unlink(pagePath, err => {
+    if (err) {
+      return res.status(500).send('Erro ao deletar a página');
+    }
+    res.redirect('/admin');
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
