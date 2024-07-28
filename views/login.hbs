@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <title>Node Pages - Login</title>
+</head>
+<body>
+    <header>
+      <h1>Node Pages - Login</h1>
+  </header>
+  <div class="container">
+    {{#if errors}}
+      <ul>
+        {{#each errors}}
+          <li>{{this.msg}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    <form method="POST" action="/login">
+      <input type="text" name="username" placeholder="Usuário" required/>
+      <input type="password" name="password" placeholder="Senha" required/>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>
