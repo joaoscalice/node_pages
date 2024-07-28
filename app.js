@@ -60,6 +60,21 @@ app.post('/login',
   }
 );  
 
+// Rota para logout
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.redirect('/admin');
+    }
+    res.redirect('/login');
+  });
+});
+
+// Rota para a página de administração
+app.get('/admin', checkAuth, (req, res) => {
+  res.render('admin');
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
