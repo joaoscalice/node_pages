@@ -168,6 +168,11 @@ app.get('/admin/delete/:name', checkAuth, (req, res) => {
   });
 });
 
+// Rota para a página de informações
+app.get('/info', (req, res) => {
+  res.render('info');
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
