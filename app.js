@@ -102,6 +102,31 @@ app.get('/page/:name', (req, res) => {
   });
 });
 
+// Rota para criar uma nova página
+app.get('/admin/create', checkAuth, (req, res) => {
+  res.render('create');
+});
+
+app.post('/admin/create', checkAuth, [
+  check('url').notEmpty().withMessage('É necessário preencher o campo de URL'),
+  check('content').notEmpty().withMessage('É necessário preencher o campo de Conteúdo')
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).render('create', { errors: errors.array() });
+  }
+
+  const { url, content } = req.body;
+  const pagePath = path.join(__dirname, 'pages', `${url}.txt`);
+  
+  fs.writeFile(pagePath, content, err => {
+    if (err) {
+      return res.status(500).send('Erro na criação da página');
+    }
+    res.redirect('/admin');
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
