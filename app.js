@@ -91,6 +91,17 @@ app.get('/', (req, res) => {
   });
 });
 
+// Visualizador das páginas criadas
+app.get('/page/:name', (req, res) => {
+  const pagePath = path.join(__dirname, 'pages', `${req.params.name}.txt`);
+  fs.readFile(pagePath, 'utf8', (err, content) => {
+    if (err) {
+      return res.status(404).send('Página não foi encontrada');
+    }
+    res.render('page', { content });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
