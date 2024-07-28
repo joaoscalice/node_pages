@@ -75,6 +75,22 @@ app.get('/admin', checkAuth, (req, res) => {
   res.render('admin');
 });
 
+// Página inicial do site
+app.get('/', (req, res) => {
+  fs.readdir(path.join(__dirname, 'pages'), (err, files) => {
+    if (err) {
+      return res.status(500).send('Sem páginas para carregar!');
+    }
+
+    const pages = files.map(file => {
+      const name = path.basename(file, '.txt');
+      return { url: `/page/${name}`, name };
+    });
+
+    res.render('index', { pages });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando: http://localhost:${PORT}`);
 });
